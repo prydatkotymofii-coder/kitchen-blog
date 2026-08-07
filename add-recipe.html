@@ -9,6 +9,20 @@
 </head>
 <body>
 
+<div id="password-gate" class="section" style="min-height:80vh; display:flex; align-items:center; justify-content:center;">
+  <div class="container" style="max-width:360px; text-align:center;">
+    <h1 style="margin-bottom:8px;">Тільки для своїх</h1>
+    <p style="color:var(--color-text-muted); margin-bottom:24px;">Введи пароль, щоб додати рецепт.</p>
+    <form id="gate-form" style="display:flex; flex-direction:column; gap:12px;">
+      <input type="password" id="gate-password" placeholder="Пароль" autofocus style="padding:12px 16px; border:1px solid var(--color-line); border-radius:4px; font-size:1rem; font-family:var(--font-body);">
+      <button type="submit" class="btn btn-primary">Увійти</button>
+      <span id="gate-error" style="color:#b23b3b; font-size:0.9rem; display:none;">Невірний пароль, спробуй ще раз.</span>
+    </form>
+  </div>
+</div>
+
+<div id="site-content" style="display:none;">
+
 <header class="site-header">
   <nav class="nav">
     <a href="index.html" class="nav-logo">Татовий <em>казан</em></a>
@@ -135,17 +149,12 @@
         <h4>Категорії</h4>
         <ul id="footer-categories" data-mode="food"></ul>
       </div>
-      <div>
-        <h4>Керування</h4>
-        <ul>
-          <li><a href="add-recipe.html">Додати рецепт</a></li>
-          <li><a href="add-coffee.html">Додати рецепт кави</a></li>
-        </ul>
-      </div>
     </div>
     <div class="footer-bottom">© 2026 Татовий казан</div>
   </div>
 </footer>
+
+</div>
 
 <script src="js/recipes-data.js"></script>
 <script src="js/main.js"></script>
@@ -229,6 +238,35 @@ ${stepsCode || "      "}
       setTimeout(() => (btn.textContent = original), 1800);
     });
   });
+</script>
+
+<script>
+  (function () {
+    const GATE_KEY = "tatoviyKazanAdminUnlocked";
+    const PASSWORD = "zeus090619";
+    const gate = document.getElementById("password-gate");
+    const content = document.getElementById("site-content");
+
+    function unlock() {
+      gate.style.display = "none";
+      content.style.display = "block";
+    }
+
+    if (localStorage.getItem(GATE_KEY) === "yes") {
+      unlock();
+    }
+
+    document.getElementById("gate-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const value = document.getElementById("gate-password").value;
+      if (value === PASSWORD) {
+        localStorage.setItem(GATE_KEY, "yes");
+        unlock();
+      } else {
+        document.getElementById("gate-error").style.display = "inline";
+      }
+    });
+  })();
 </script>
 
 </body>
