@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="page-title">Рецепт — Татовий казан</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <a href="index.html" class="nav-logo">Татовий <em>казан</em></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Головна</a></li>
+      <li><a href="recipes.html">Рецепти</a></li>
+      <li><a href="coffee.html">☕ Кав'ярня</a></li>
+      <li><a href="about.html">Про мене</a></li>
+      <li><a href="contact.html">Контакти</a></li>
+    </ul>
+    <button class="nav-toggle" aria-label="Меню">☰</button>
+  </nav>
+</header>
+
+<div id="recipe-content"></div>
+
+<div class="container" id="not-found" style="display:none; text-align:center; padding: 80px 0;">
+  <h1>Рецепт не знайдено</h1>
+  <p>На жаль, такого рецепту немає.</p>
+  <a href="recipes.html" class="btn btn-primary">Повернутись до рецептів</a>
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4>Татовий казан</h4>
+        <p style="color: var(--color-text-muted); font-size:0.9rem;">Особистий блог з домашніми рецептами.</p>
+      </div>
+      <div>
+        <h4>Навігація</h4>
+        <ul>
+          <li><a href="index.html">Головна</a></li>
+          <li><a href="recipes.html">Рецепти</a></li>
+          <li><a href="coffee.html">Кав'ярня</a></li>
+          <li><a href="about.html">Про мене</a></li>
+          <li><a href="contact.html">Контакти</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Категорії</h4>
+        <ul id="footer-categories" data-mode="food"></ul>
+      </div>
+      <div>
+        <h4>Керування</h4>
+        <ul>
+          <li><a href="add-recipe.html">Додати рецепт</a></li>
+          <li><a href="add-coffee.html">Додати рецепт кави</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 Татовий казан</div>
+  </div>
+</footer>
+
+<script src="js/recipes-data.js"></script>
+<script src="js/main.js"></script>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
+  const recipe = RECIPES.find((r) => r.id === id);
+
+  if (!recipe) {
+    document.getElementById("not-found").style.display = "block";
+  } else {
+    document.getElementById("page-title").textContent = `${recipe.title} — Татовий казан`;
+
+    const ingredientsHtml = recipe.ingredients.map((i) => `<li>${i}</li>`).join("");
+    const stepsHtml = recipe.steps.map((s) => `<li>${s}</li>`).join("");
+
+    document.getElementById("recipe-content").innerHTML = `
+      <section class="recipe-detail-header">
+        <div class="container">
+          <a href="recipes.html" class="back-link">← Усі рецепти</a>
+          <div class="recipe-card-category">${recipe.category}</div>
+          <h1>${recipe.title}</h1>
+          <p style="max-width:600px; color: var(--color-text-muted);">${recipe.excerpt || ""}</p>
+          <div class="recipe-detail-meta">
+            <div><strong>${recipe.time}</strong>Час приготування</div>
+            <div><strong>${recipe.servings}</strong>Порцій</div>
+            <div><strong>${recipe.difficulty}</strong>Складність</div>
+          </div>
+          <div class="recipe-detail-media">${recipeMediaHtml(recipe)}</div>
+        </div>
+      </section>
+      <section class="section" style="padding-top:0;">
+        <div class="container">
+          <div class="recipe-body-grid">
+            <div class="recipe-panel">
+              <h2>Інгредієнти</h2>
+              <ul class="ingredient-list">${ingredientsHtml}</ul>
+            </div>
+            <div class="recipe-panel">
+              <h2>Покрокове приготування</h2>
+              <ol class="steps-list">${stepsHtml}</ol>
+            </div>
+          </div>
+        </div>
+      </section>
+    `;
+  }
+</script>
+
+</body>
+</html>

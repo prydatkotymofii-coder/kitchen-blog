@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="page-title">Рецепт кави — Кав'ярня дядка Тимофія</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/coffee-theme.css">
+</head>
+<body class="coffee-page">
+
+<header class="site-header">
+  <nav class="nav">
+    <a href="index.html" class="nav-logo">Татовий <em>казан</em></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Головна</a></li>
+      <li><a href="recipes.html">Рецепти</a></li>
+      <li><a href="coffee.html">☕ Кав'ярня</a></li>
+      <li><a href="about.html">Про мене</a></li>
+      <li><a href="contact.html">Контакти</a></li>
+    </ul>
+    <button class="nav-toggle" aria-label="Меню">☰</button>
+  </nav>
+</header>
+
+<div id="recipe-content"></div>
+
+<div class="container" id="not-found" style="display:none; text-align:center; padding: 80px 0;">
+  <h1>Рецепт кави не знайдено</h1>
+  <p>На жаль, такого рецепту немає.</p>
+  <a href="coffee.html" class="btn btn-primary">Повернутись до кав'ярні</a>
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4>Кав'ярня дядка Тимофія</h4>
+        <p style="color: var(--color-text-muted); font-size:0.9rem;">Кавовий куточок особистого блогу.</p>
+      </div>
+      <div>
+        <h4>Навігація</h4>
+        <ul>
+          <li><a href="index.html">Головна</a></li>
+          <li><a href="recipes.html">Рецепти</a></li>
+          <li><a href="coffee.html">Кав'ярня</a></li>
+          <li><a href="about.html">Про мене</a></li>
+          <li><a href="contact.html">Контакти</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Категорії кави</h4>
+        <ul id="footer-categories" data-mode="coffee"></ul>
+      </div>
+      <div>
+        <h4>Керування</h4>
+        <ul>
+          <li><a href="add-coffee.html">Додати рецепт кави</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 Татовий казан · Кав'ярня дядка Тимофія</div>
+  </div>
+</footer>
+
+<script src="js/coffee-data.js"></script>
+<script src="js/main.js"></script>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
+  const drink = COFFEE.find((c) => c.id === id);
+
+  if (!drink) {
+    document.getElementById("not-found").style.display = "block";
+  } else {
+    document.getElementById("page-title").textContent = `${drink.title} — Кав'ярня дядка Тимофія`;
+
+    const ingredientsHtml = drink.ingredients.map((i) => `<li>${i}</li>`).join("");
+    const stepsHtml = drink.steps.map((s) => `<li>${s}</li>`).join("");
+
+    document.getElementById("recipe-content").innerHTML = `
+      <section class="recipe-detail-header">
+        <div class="container">
+          <a href="coffee.html" class="back-link">← Усі рецепти кави</a>
+          <div class="recipe-card-category">${drink.category}</div>
+          <h1>${drink.title}</h1>
+          <p style="max-width:600px; color: var(--color-text-muted);">${drink.excerpt || ""}</p>
+          <div class="recipe-detail-meta">
+            <div><strong>${drink.time}</strong>Час приготування</div>
+            <div><strong>${drink.servings}</strong>Порцій</div>
+            <div><strong>${drink.difficulty}</strong>Складність</div>
+          </div>
+          <div class="recipe-detail-media">${recipeMediaHtml(drink)}</div>
+        </div>
+      </section>
+      <section class="section" style="padding-top:0;">
+        <div class="container">
+          <div class="recipe-body-grid">
+            <div class="recipe-panel">
+              <h2>Інгредієнти</h2>
+              <ul class="ingredient-list">${ingredientsHtml}</ul>
+            </div>
+            <div class="recipe-panel">
+              <h2>Покрокове приготування</h2>
+              <ol class="steps-list">${stepsHtml}</ol>
+            </div>
+          </div>
+        </div>
+      </section>
+    `;
+  }
+</script>
+
+</body>
+</html>

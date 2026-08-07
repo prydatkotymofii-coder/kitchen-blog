@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Усі рецепти — Татовий казан</title>
+<meta name="description" content="Каталог особистих рецептів з фільтром за категорією та пошуком.">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <a href="index.html" class="nav-logo">Татовий <em>казан</em></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Головна</a></li>
+      <li><a href="recipes.html">Рецепти</a></li>
+      <li><a href="coffee.html">☕ Кав'ярня</a></li>
+      <li><a href="about.html">Про мене</a></li>
+      <li><a href="contact.html">Контакти</a></li>
+    </ul>
+    <button class="nav-toggle" aria-label="Меню">☰</button>
+  </nav>
+</header>
+
+<section class="section" style="padding-bottom:0;">
+  <div class="container">
+    <h1 class="section-title">Усі рецепти</h1>
+    <p class="section-subtitle">Знайди страву за назвою або обери категорію нижче.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="filters-bar">
+      <input type="text" id="search-input" class="search-input" placeholder="Пошук рецепту за назвою...">
+    </div>
+    <div class="category-list" id="category-filter"></div>
+
+    <div class="recipe-grid" id="recipe-grid"></div>
+    <p class="no-results" id="no-results">За твоїм запитом рецептів не знайдено. Спробуй інше слово або категорію.</p>
+
+    <div class="empty-state" id="empty-state" style="display:none;">
+      <h3>Рецептів ще немає</h3>
+      <p>Додай свій перший рецепт — і він з'явиться в цьому каталозі.</p>
+      <a href="add-recipe.html" class="btn btn-primary">Додати рецепт</a>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4>Татовий казан</h4>
+        <p style="color: var(--color-text-muted); font-size:0.9rem;">Особистий блог з домашніми рецептами.</p>
+      </div>
+      <div>
+        <h4>Навігація</h4>
+        <ul>
+          <li><a href="index.html">Головна</a></li>
+          <li><a href="recipes.html">Рецепти</a></li>
+          <li><a href="coffee.html">Кав'ярня</a></li>
+          <li><a href="about.html">Про мене</a></li>
+          <li><a href="contact.html">Контакти</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Категорії</h4>
+        <ul id="footer-categories" data-mode="food"></ul>
+      </div>
+      <div>
+        <h4>Керування</h4>
+        <ul>
+          <li><a href="add-recipe.html">Додати рецепт</a></li>
+          <li><a href="add-coffee.html">Додати рецепт кави</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 Татовий казан</div>
+  </div>
+</footer>
+
+<script src="js/recipes-data.js"></script>
+<script src="js/main.js"></script>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  let activeCategory = params.get("category") || "Усі";
+  let searchQuery = "";
+
+  const categoryFilter = document.getElementById("category-filter");
+  const recipeGrid = document.getElementById("recipe-grid");
+  const noResults = document.getElementById("no-results");
+  const searchInput = document.getElementById("search-input");
+  const emptyState = document.getElementById("empty-state");
+
+  function buildCategoryChips() {
+    categoryFilter.innerHTML = "";
+    ["Усі", ...CATEGORIES].forEach((cat) => {
+      const chip = document.createElement("button");
+      chip.className = "category-chip" + (cat === activeCategory ? " active" : "");
+      chip.textContent = cat;
+      chip.addEventListener("click", () => {
+        activeCategory = cat;
+        buildCategoryChips();
+        renderRecipes();
+      });
+      categoryFilter.appendChild(chip);
+    });
+  }
+
+  function renderRecipes() {
+    if (RECIPES.length === 0) {
+      emptyState.style.display = "block";
+      categoryFilter.style.display = "none";
+      document.getElementById("search-input").parentElement.style.display = "none";
+      return;
+    }
+
+    const query = searchQuery.trim().toLowerCase();
+    const filtered = RECIPES.filter((r) => {
+      const matchesCategory = activeCategory === "Усі" || r.category === activeCategory;
+      const matchesQuery = !query || r.title.toLowerCase().includes(query);
+      return matchesCategory && matchesQuery;
+    });
+
+    recipeGrid.innerHTML = "";
+    filtered.forEach((r) => recipeGrid.appendChild(renderRecipeCard(r)));
+    noResults.style.display = filtered.length === 0 ? "block" : "none";
+  }
+
+  searchInput.addEventListener("input", (e) => {
+    searchQuery = e.target.value;
+    renderRecipes();
+  });
+
+  buildCategoryChips();
+  renderRecipes();
+</script>
+
+</body>
+</html>

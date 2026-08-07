@@ -1,0 +1,33 @@
+/* ==========================================================================
+   Кавова тема — підключається ДОДАТКОВО, після style.css, лише на
+   сторінках розділу "Кав'ярня дядка Тимофія" (coffee.html, coffee-drink.html,
+   add-coffee.html). Перевизначає колірні змінні на кавові відтінки:
+   еспресо, карамель, тепле латте. Верстка та компоненти залишаються ті самі.
+   ========================================================================== */
+
+body.coffee-page {
+  --color-bg: #f4e9d8;
+  --color-surface: #fffaf2;
+  --color-ink: #2e1a0f;
+  --color-text-muted: #7a5c40;
+  --color-accent: #93591f;
+  --color-accent-dark: #6b3f14;
+  --color-line: #ddc4a0;
+  --color-cream: #e8d2ac;
+}
+
+body.coffee-page .site-header {
+  background: linear-gradient(180deg, #ecdcc0 0%, var(--color-bg) 100%);
+}
+
+body.coffee-page .steps-list li::before {
+  border-color: var(--color-accent);
+}
+
+body.coffee-page .output-panel {
+  background: #241207;
+}
+
+body.coffee-page .output-code {
+  background: #180d05;
+}

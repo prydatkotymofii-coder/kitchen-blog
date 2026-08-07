@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Додати рецепт кави — Кав'ярня дядка Тимофія</title>
+<meta name="description" content="Проста форма для додавання нового кавового рецепту без знання коду.">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/coffee-theme.css">
+</head>
+<body class="coffee-page">
+
+<header class="site-header">
+  <nav class="nav">
+    <a href="index.html" class="nav-logo">Татовий <em>казан</em></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Головна</a></li>
+      <li><a href="recipes.html">Рецепти</a></li>
+      <li><a href="coffee.html">☕ Кав'ярня</a></li>
+      <li><a href="about.html">Про мене</a></li>
+      <li><a href="contact.html">Контакти</a></li>
+    </ul>
+    <button class="nav-toggle" aria-label="Меню">☰</button>
+  </nav>
+</header>
+
+<section class="section" style="padding-bottom:0;">
+  <div class="container">
+    <h1 class="section-title">Додати новий рецепт кави</h1>
+    <p class="section-subtitle">Заповни поля — праворуч одразу з'явиться готовий код. Скопіюй його і встав у файл <code>js/coffee-data.js</code>, у масив <code>COFFEE</code>, будь-де між квадратними дужками <code>[ ]</code>.</p>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0;">
+  <div class="container">
+    <div class="builder-grid">
+
+      <form class="builder-form" id="builder-form">
+        <div class="form-group">
+          <label for="f-title">Назва напою</label>
+          <input type="text" id="f-title" placeholder="Наприклад: Капучино з корицею" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="f-category">Категорія</label>
+            <select id="f-category">
+              <option>Класична кава</option>
+              <option>З молоком</option>
+              <option>Холодна кава</option>
+              <option>Авторські рецепти</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="f-difficulty">Складність</label>
+            <select id="f-difficulty">
+              <option>Легка</option>
+              <option>Середня</option>
+              <option>Складна</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="f-time">Час приготування</label>
+            <input type="text" id="f-time" placeholder="напр. 10 хв">
+          </div>
+          <div class="form-group">
+            <label for="f-servings">Кількість порцій</label>
+            <input type="number" id="f-servings" min="1" placeholder="1">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="f-image">Шлях до фото (необов'язково)</label>
+          <input type="text" id="f-image" placeholder="images/cappuccino.jpg">
+          <span class="builder-hint">Поклади файл фото у папку images/ і вкажи тут його назву. Якщо фото ще немає — залиш поле пустим, на сайті буде акуратна заглушка.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="f-excerpt">Короткий опис (1-2 речення)</label>
+          <textarea id="f-excerpt" rows="2" placeholder="Короткий опис напою для картки"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="f-ingredients">Інгредієнти</label>
+          <textarea id="f-ingredients" rows="6" placeholder="Один інгредієнт на рядок, наприклад:&#10;30 мл еспресо&#10;120 мл молока&#10;Щіпка кориці"></textarea>
+          <span class="builder-hint">Кожен інгредієнт — з нового рядка.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="f-steps">Кроки приготування</label>
+          <textarea id="f-steps" rows="8" placeholder="Один крок на рядок, наприклад:&#10;Звари еспресо.&#10;Збий молоко до густої пінки."></textarea>
+          <span class="builder-hint">Кожен крок — з нового рядка, у порядку виконання.</span>
+        </div>
+      </form>
+
+      <div class="output-panel">
+        <h3>Готовий код рецепту</h3>
+        <div class="output-code" id="output-code">Почни заповнювати форму зліва — тут з'явиться код.</div>
+        <button class="btn btn-primary" id="copy-btn" style="width:100%; margin-bottom:16px;" type="button">Скопіювати код</button>
+        <div class="output-steps">
+          <strong>Що робити далі:</strong><br>
+          1. Натисни «Скопіювати код».<br>
+          2. Відкрий файл <code>js/coffee-data.js</code> у будь-якому текстовому редакторі.<br>
+          3. Встав скопійований блок усередину масиву <code>COFFEE = [ ... ]</code> (перед закриваючою квадратною дужкою, розділивши комою з попереднім рецептом, якщо він є).<br>
+          4. Збережи файл і онови сторінку <code>coffee.html</code> — рецепт з'явиться автоматично.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4>Кав'ярня дядка Тимофія</h4>
+        <p style="color: var(--color-text-muted); font-size:0.9rem;">Кавовий куточок особистого блогу.</p>
+      </div>
+      <div>
+        <h4>Навігація</h4>
+        <ul>
+          <li><a href="index.html">Головна</a></li>
+          <li><a href="recipes.html">Рецепти</a></li>
+          <li><a href="coffee.html">Кав'ярня</a></li>
+          <li><a href="about.html">Про мене</a></li>
+          <li><a href="contact.html">Контакти</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Категорії кави</h4>
+        <ul id="footer-categories" data-mode="coffee"></ul>
+      </div>
+      <div>
+        <h4>Керування</h4>
+        <ul>
+          <li><a href="add-coffee.html">Додати рецепт кави</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 Татовий казан · Кав'ярня дядка Тимофія</div>
+  </div>
+</footer>
+
+<script src="js/coffee-data.js"></script>
+<script src="js/main.js"></script>
+<script>
+  const TRANSLIT_MAP = {
+    а:"a", б:"b", в:"v", г:"h", ґ:"g", д:"d", е:"e", є:"ie", ж:"zh", з:"z",
+    и:"y", і:"i", ї:"i", й:"i", к:"k", л:"l", м:"m", н:"n", о:"o", п:"p",
+    р:"r", с:"s", т:"t", у:"u", ф:"f", х:"kh", ц:"ts", ч:"ch", ш:"sh",
+    щ:"shch", ь:"", ю:"iu", я:"ia", " ":"-", "'":"", "’":""
+  };
+
+  function slugify(text) {
+    const lower = text.toLowerCase();
+    let out = "";
+    for (const ch of lower) {
+      if (TRANSLIT_MAP.hasOwnProperty(ch)) {
+        out += TRANSLIT_MAP[ch];
+      } else if (/[a-z0-9-]/.test(ch)) {
+        out += ch;
+      }
+    }
+    return out.replace(/-+/g, "-").replace(/^-|-$/g, "") || "coffee-drink";
+  }
+
+  function jsString(str) {
+    return JSON.stringify(str || "");
+  }
+
+  function linesToArray(text) {
+    return text.split("\n").map((s) => s.trim()).filter(Boolean);
+  }
+
+  function buildCode() {
+    const title = document.getElementById("f-title").value.trim();
+    const category = document.getElementById("f-category").value;
+    const difficulty = document.getElementById("f-difficulty").value;
+    const time = document.getElementById("f-time").value.trim();
+    const servings = document.getElementById("f-servings").value.trim() || "1";
+    const image = document.getElementById("f-image").value.trim();
+    const excerpt = document.getElementById("f-excerpt").value.trim();
+    const ingredients = linesToArray(document.getElementById("f-ingredients").value);
+    const steps = linesToArray(document.getElementById("f-steps").value);
+
+    if (!title) {
+      document.getElementById("output-code").textContent = "Почни заповнювати форму зліва — тут з'явиться код.";
+      return;
+    }
+
+    const id = slugify(title);
+    const ingredientsCode = ingredients.map((i) => `    ${jsString(i)}`).join(",\n");
+    const stepsCode = steps.map((s) => `    ${jsString(s)}`).join(",\n");
+
+    const code = `  {
+    id: ${jsString(id)},
+    title: ${jsString(title)},
+    category: ${jsString(category)},
+    image: ${jsString(image)},
+    time: ${jsString(time)},
+    servings: ${servings},
+    difficulty: ${jsString(difficulty)},
+    excerpt: ${jsString(excerpt)},
+    ingredients: [
+${ingredientsCode || "      "}
+    ],
+    steps: [
+${stepsCode || "      "}
+    ]
+  },`;
+
+    document.getElementById("output-code").textContent = code;
+  }
+
+  document.getElementById("builder-form").addEventListener("input", buildCode);
+
+  document.getElementById("copy-btn").addEventListener("click", () => {
+    const text = document.getElementById("output-code").textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById("copy-btn");
+      const original = btn.textContent;
+      btn.textContent = "Скопійовано ✓";
+      setTimeout(() => (btn.textContent = original), 1800);
+    });
+  });
+</script>
+
+</body>
+</html>

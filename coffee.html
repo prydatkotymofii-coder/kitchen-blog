@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Кав'ярня дядка Тимофія</title>
+<meta name="description" content="Кавовий куточок особистого блогу — рецепти кави з фільтром за категорією та пошуком.">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/coffee-theme.css">
+</head>
+<body class="coffee-page">
+
+<header class="site-header">
+  <nav class="nav">
+    <a href="index.html" class="nav-logo">Татовий <em>казан</em></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Головна</a></li>
+      <li><a href="recipes.html">Рецепти</a></li>
+      <li><a href="coffee.html">☕ Кав'ярня</a></li>
+      <li><a href="about.html">Про мене</a></li>
+      <li><a href="contact.html">Контакти</a></li>
+    </ul>
+    <button class="nav-toggle" aria-label="Меню">☰</button>
+  </nav>
+</header>
+
+<section class="section" style="padding-bottom:0;">
+  <div class="container">
+    <span class="eyebrow" style="text-transform:uppercase; letter-spacing:0.12em; font-size:0.78rem; color:var(--color-accent); display:block; margin-bottom:14px;">Кавовий куточок</span>
+    <h1 class="section-title">Кав'ярня дядка Тимофія</h1>
+    <p class="section-subtitle">Улюблені рецепти кави — від класичного еспресо до домашніх авторських змішувань.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="filters-bar">
+      <input type="text" id="search-input" class="search-input" placeholder="Пошук напою за назвою...">
+    </div>
+    <div class="category-list" id="category-filter"></div>
+
+    <div class="recipe-grid" id="coffee-grid"></div>
+    <p class="no-results" id="no-results">За твоїм запитом напоїв не знайдено. Спробуй інше слово або категорію.</p>
+
+    <div class="empty-state" id="empty-state" style="display:none;">
+      <h3>Кавових рецептів ще немає</h3>
+      <p>Додай свій перший рецепт кави — і він з'явиться в цьому каталозі.</p>
+      <a href="add-coffee.html" class="btn btn-primary">Додати рецепт кави</a>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4>Кав'ярня дядка Тимофія</h4>
+        <p style="color: var(--color-text-muted); font-size:0.9rem;">Кавовий куточок особистого блогу.</p>
+      </div>
+      <div>
+        <h4>Навігація</h4>
+        <ul>
+          <li><a href="index.html">Головна</a></li>
+          <li><a href="recipes.html">Рецепти</a></li>
+          <li><a href="coffee.html">Кав'ярня</a></li>
+          <li><a href="about.html">Про мене</a></li>
+          <li><a href="contact.html">Контакти</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Категорії кави</h4>
+        <ul id="footer-categories" data-mode="coffee"></ul>
+      </div>
+      <div>
+        <h4>Керування</h4>
+        <ul>
+          <li><a href="add-coffee.html">Додати рецепт кави</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 Татовий казан · Кав'ярня дядка Тимофія</div>
+  </div>
+</footer>
+
+<script src="js/coffee-data.js"></script>
+<script src="js/main.js"></script>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  let activeCategory = params.get("category") || "Усі";
+  let searchQuery = "";
+
+  const categoryFilter = document.getElementById("category-filter");
+  const coffeeGrid = document.getElementById("coffee-grid");
+  const noResults = document.getElementById("no-results");
+  const searchInput = document.getElementById("search-input");
+  const emptyState = document.getElementById("empty-state");
+
+  function buildCategoryChips() {
+    categoryFilter.innerHTML = "";
+    ["Усі", ...COFFEE_CATEGORIES].forEach((cat) => {
+      const chip = document.createElement("button");
+      chip.className = "category-chip" + (cat === activeCategory ? " active" : "");
+      chip.textContent = cat;
+      chip.addEventListener("click", () => {
+        activeCategory = cat;
+        buildCategoryChips();
+        renderCoffee();
+      });
+      categoryFilter.appendChild(chip);
+    });
+  }
+
+  function renderCoffee() {
+    if (COFFEE.length === 0) {
+      emptyState.style.display = "block";
+      categoryFilter.style.display = "none";
+      document.getElementById("search-input").parentElement.style.display = "none";
+      return;
+    }
+
+    const query = searchQuery.trim().toLowerCase();
+    const filtered = COFFEE.filter((c) => {
+      const matchesCategory = activeCategory === "Усі" || c.category === activeCategory;
+      const matchesQuery = !query || c.title.toLowerCase().includes(query);
+      return matchesCategory && matchesQuery;
+    });
+
+    coffeeGrid.innerHTML = "";
+    filtered.forEach((c) => coffeeGrid.appendChild(renderRecipeCard(c, "coffee-drink.html")));
+    noResults.style.display = filtered.length === 0 ? "block" : "none";
+  }
+
+  searchInput.addEventListener("input", (e) => {
+    searchQuery = e.target.value;
+    renderCoffee();
+  });
+
+  buildCategoryChips();
+  renderCoffee();
+</script>
+
+</body>
+</html>

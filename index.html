@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Мій кулінарний блог</title>
+<meta name="description" content="Особистий кулінарний блог з домашніми рецептами та фото страв.">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <a href="index.html" class="nav-logo">Татовий <em>казан</em></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Головна</a></li>
+      <li><a href="recipes.html">Рецепти</a></li>
+      <li><a href="coffee.html">☕ Кав'ярня</a></li>
+      <li><a href="about.html">Про мене</a></li>
+      <li><a href="contact.html">Контакти</a></li>
+    </ul>
+    <button class="nav-toggle" aria-label="Меню">☰</button>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <span class="eyebrow">Особистий кулінарний блог</span>
+      <h1>Рецепти, які пахнуть домом</h1>
+      <p>Тут я збираю страви, які готую сам — прості, перевірені й з душею. Кожен рецепт із фото та покроковими поясненнями, щоб повторити було легко.</p>
+      <a href="recipes.html" class="btn btn-primary">Переглянути рецепти</a>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <h2 class="section-title">Останні рецепти</h2>
+      <a href="recipes.html" class="btn btn-outline">Усі рецепти</a>
+    </div>
+    <div class="recipe-grid" id="featured-recipes"></div>
+    <div class="empty-state" id="empty-state" style="display:none;">
+      <h3>Тут з'являться твої рецепти</h3>
+      <p>Поки блог порожній — додай свій перший рецепт через просту форму, і він одразу з'явиться тут.</p>
+      <a href="add-recipe.html" class="btn btn-primary">Додати перший рецепт</a>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4>Татовий казан</h4>
+        <p style="color: var(--color-text-muted); font-size:0.9rem;">Особистий блог з домашніми рецептами.</p>
+      </div>
+      <div>
+        <h4>Навігація</h4>
+        <ul>
+          <li><a href="index.html">Головна</a></li>
+          <li><a href="recipes.html">Рецепти</a></li>
+          <li><a href="coffee.html">Кав'ярня</a></li>
+          <li><a href="about.html">Про мене</a></li>
+          <li><a href="contact.html">Контакти</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Категорії</h4>
+        <ul id="footer-categories" data-mode="food"></ul>
+      </div>
+      <div>
+        <h4>Керування</h4>
+        <ul>
+          <li><a href="add-recipe.html">Додати рецепт</a></li>
+          <li><a href="add-coffee.html">Додати рецепт кави</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 Татовий казан</div>
+  </div>
+</footer>
+
+<script src="js/recipes-data.js"></script>
+<script src="js/main.js"></script>
+<script>
+  const featuredContainer = document.getElementById("featured-recipes");
+  const emptyState = document.getElementById("empty-state");
+
+  if (RECIPES.length === 0) {
+    emptyState.style.display = "block";
+  } else {
+    RECIPES.slice(0, 6).forEach((r) => featuredContainer.appendChild(renderRecipeCard(r)));
+  }
+</script>
+
+</body>
+</html>
