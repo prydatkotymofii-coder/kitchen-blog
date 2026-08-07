@@ -30,19 +30,23 @@
 
     <div class="contact-grid">
       <div>
-        <form class="contact-form" id="contact-form">
+        <form class="contact-form" id="contact-form" name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
+          <input type="hidden" name="form-name" value="contact">
+          <p style="display:none;">
+            <label>Не заповнюй це поле: <input name="bot-field"></label>
+          </p>
           <div class="form-success" id="form-success">Дякую! Повідомлення надіслано — відповім, як тільки зможу.</div>
           <div class="form-group">
             <label for="name">Ім'я</label>
-            <input type="text" id="name" required placeholder="Твоє ім'я">
+            <input type="text" id="name" name="name" required placeholder="Твоє ім'я">
           </div>
           <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" id="email" required placeholder="you@example.com">
+            <input type="email" id="email" name="email" required placeholder="you@example.com">
           </div>
           <div class="form-group">
             <label for="message">Повідомлення</label>
-            <textarea id="message" rows="5" required placeholder="Напиши тут своє повідомлення..."></textarea>
+            <textarea id="message" name="message" rows="5" required placeholder="Напиши тут своє повідомлення..."></textarea>
           </div>
           <button type="submit" class="btn btn-primary">Надіслати</button>
         </form>
@@ -50,7 +54,7 @@
 
       <div>
         <ul class="contact-info-list">
-          <li><strong>Email</strong><a href="mailto:hello@example.com">hello@example.com</a></li>
+          <li><strong>Email</strong><a href="mailto:prydatkotymofii@gmail.com">prydatkotymofii@gmail.com</a></li>
           <li><strong>Соцмережі</strong>Instagram · Pinterest</li>
         </ul>
         <p style="color: var(--color-text-muted);">Маєш свій сімейний рецепт, який хочеш побачити тут? Напиши — з радістю розгляну.</p>
@@ -90,8 +94,21 @@
 <script>
   document.getElementById("contact-form").addEventListener("submit", (e) => {
     e.preventDefault();
-    document.getElementById("form-success").style.display = "block";
-    e.target.reset();
+    const form = e.target;
+    const data = new URLSearchParams(new FormData(form)).toString();
+
+    fetch("/", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: data
+    })
+      .then(() => {
+        document.getElementById("form-success").style.display = "block";
+        form.reset();
+      })
+      .catch(() => {
+        alert("Щось пішло не так із відправкою. Напиши, будь ласка, напряму на prydatkotymofii@gmail.com");
+      });
   });
 </script>
 
