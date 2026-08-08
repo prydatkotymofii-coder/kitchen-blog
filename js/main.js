@@ -46,6 +46,27 @@ function recipeMediaHtml(r) {
   return `<div class="media-placeholder"><span>Фото</span></div>`;
 }
 
+function renderArticleCard(a, detailPage) {
+  detailPage = detailPage || "article.html";
+  const link = document.createElement("a");
+  link.href = `${detailPage}?id=${encodeURIComponent(a.id)}`;
+  link.className = "recipe-card-link";
+  link.innerHTML = `
+    <article class="recipe-card">
+      <div class="recipe-card-media">${recipeMediaHtml(a)}</div>
+      <div class="recipe-card-body">
+        <div class="recipe-card-category">${a.category}</div>
+        <h3 class="recipe-card-title">${a.title}</h3>
+        <p class="recipe-card-excerpt">${a.excerpt || ""}</p>
+        <div class="recipe-card-meta">
+          <span>${a.readTime || ""}</span>
+        </div>
+      </div>
+    </article>
+  `;
+  return link;
+}
+
 function renderRecipeCard(r, detailPage) {
   detailPage = detailPage || "recipe.html";
   const a = document.createElement("a");

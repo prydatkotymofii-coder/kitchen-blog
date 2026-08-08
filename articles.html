@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Усі рецепти — Татовий казан</title>
-<meta name="description" content="Каталог особистих рецептів з фільтром за категорією та пошуком.">
+<title>Статті — Татовий казан</title>
+<meta name="description" content="Поради, техніки та історії про готування — статті особистого кулінарного блогу.">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -26,27 +26,27 @@
 <section class="section" style="padding-bottom:0;">
   <div class="container">
     <div class="sub-tabs">
-      <a href="recipes.html" class="active">Рецепти</a>
-      <a href="articles.html">Статті</a>
+      <a href="recipes.html">Рецепти</a>
+      <a href="articles.html" class="active">Статті</a>
     </div>
-    <h1 class="section-title">Усі рецепти</h1>
-    <p class="section-subtitle">Знайди страву за назвою або обери категорію нижче.</p>
+    <h1 class="section-title">Статті</h1>
+    <p class="section-subtitle">Поради, техніки та невеликі історії про готування.</p>
   </div>
 </section>
 
 <section class="section">
   <div class="container">
     <div class="filters-bar">
-      <input type="text" id="search-input" class="search-input" placeholder="Пошук рецепту за назвою...">
+      <input type="text" id="search-input" class="search-input" placeholder="Пошук статті за назвою...">
     </div>
     <div class="category-list" id="category-filter"></div>
 
-    <div class="recipe-grid" id="recipe-grid"></div>
-    <p class="no-results" id="no-results">За твоїм запитом рецептів не знайдено. Спробуй інше слово або категорію.</p>
+    <div class="recipe-grid" id="article-grid"></div>
+    <p class="no-results" id="no-results">За твоїм запитом статей не знайдено. Спробуй інше слово або категорію.</p>
 
     <div class="empty-state" id="empty-state" style="display:none;">
-      <h3>Рецептів ще немає</h3>
-      <p>Скоро тут з'являться перші рецепти.</p>
+      <h3>Статей ще немає</h3>
+      <p>Скоро тут з'являться перші статті.</p>
     </div>
   </div>
 </section>
@@ -63,6 +63,7 @@
         <ul>
           <li><a href="index.html">Головна</a></li>
           <li><a href="recipes.html">Рецепти</a></li>
+          <li><a href="articles.html">Статті</a></li>
           <li><a href="coffee.html">Кав'ярня</a></li>
           <li><a href="about.html">Про мене</a></li>
           <li><a href="contact.html">Контакти</a></li>
@@ -78,6 +79,7 @@
 </footer>
 
 <script src="js/recipes-data.js"></script>
+<script src="js/articles-data.js"></script>
 <script src="js/main.js"></script>
 <script>
   const params = new URLSearchParams(window.location.search);
@@ -85,28 +87,28 @@
   let searchQuery = "";
 
   const categoryFilter = document.getElementById("category-filter");
-  const recipeGrid = document.getElementById("recipe-grid");
+  const articleGrid = document.getElementById("article-grid");
   const noResults = document.getElementById("no-results");
   const searchInput = document.getElementById("search-input");
   const emptyState = document.getElementById("empty-state");
 
   function buildCategoryChips() {
     categoryFilter.innerHTML = "";
-    ["Усі", ...CATEGORIES].forEach((cat) => {
+    ["Усі", ...ARTICLE_CATEGORIES].forEach((cat) => {
       const chip = document.createElement("button");
       chip.className = "category-chip" + (cat === activeCategory ? " active" : "");
       chip.textContent = cat;
       chip.addEventListener("click", () => {
         activeCategory = cat;
         buildCategoryChips();
-        renderRecipes();
+        renderArticles();
       });
       categoryFilter.appendChild(chip);
     });
   }
 
-  function renderRecipes() {
-    if (RECIPES.length === 0) {
+  function renderArticles() {
+    if (ARTICLES.length === 0) {
       emptyState.style.display = "block";
       categoryFilter.style.display = "none";
       document.getElementById("search-input").parentElement.style.display = "none";
@@ -114,24 +116,24 @@
     }
 
     const query = searchQuery.trim().toLowerCase();
-    const filtered = RECIPES.filter((r) => {
-      const matchesCategory = activeCategory === "Усі" || r.category === activeCategory;
-      const matchesQuery = !query || r.title.toLowerCase().includes(query);
+    const filtered = ARTICLES.filter((a) => {
+      const matchesCategory = activeCategory === "Усі" || a.category === activeCategory;
+      const matchesQuery = !query || a.title.toLowerCase().includes(query);
       return matchesCategory && matchesQuery;
     });
 
-    recipeGrid.innerHTML = "";
-    filtered.forEach((r) => recipeGrid.appendChild(renderRecipeCard(r)));
+    articleGrid.innerHTML = "";
+    filtered.forEach((a) => articleGrid.appendChild(renderArticleCard(a, "article.html")));
     noResults.style.display = filtered.length === 0 ? "block" : "none";
   }
 
   searchInput.addEventListener("input", (e) => {
     searchQuery = e.target.value;
-    renderRecipes();
+    renderArticles();
   });
 
   buildCategoryChips();
-  renderRecipes();
+  renderArticles();
 </script>
 
 </body>

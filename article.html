@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title id="page-title">Рецепт — Татовий казан</title>
+<title id="page-title">Стаття — Татовий казан</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -22,12 +22,12 @@
   </nav>
 </header>
 
-<div id="recipe-content"></div>
+<div id="article-content"></div>
 
 <div class="container" id="not-found" style="display:none; text-align:center; padding: 80px 0;">
-  <h1>Рецепт не знайдено</h1>
-  <p>На жаль, такого рецепту немає.</p>
-  <a href="recipes.html" class="btn btn-primary">Повернутись до рецептів</a>
+  <h1>Статтю не знайдено</h1>
+  <p>На жаль, такої статті немає.</p>
+  <a href="articles.html" class="btn btn-primary">Повернутись до статей</a>
 </div>
 
 <footer class="site-footer">
@@ -58,47 +58,36 @@
 </footer>
 
 <script src="js/recipes-data.js"></script>
+<script src="js/articles-data.js"></script>
 <script src="js/main.js"></script>
 <script>
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
-  const recipe = RECIPES.find((r) => r.id === id);
+  const article = ARTICLES.find((a) => a.id === id);
 
-  if (!recipe) {
+  if (!article) {
     document.getElementById("not-found").style.display = "block";
   } else {
-    document.getElementById("page-title").textContent = `${recipe.title} — Татовий казан`;
+    document.getElementById("page-title").textContent = `${article.title} — Татовий казан`;
 
-    const ingredientsHtml = recipe.ingredients.map((i) => `<li>${i}</li>`).join("");
-    const stepsHtml = recipe.steps.map((s) => `<li>${s}</li>`).join("");
+    const bodyHtml = (article.body || []).map((p) => `<p>${p}</p>`).join("");
 
-    document.getElementById("recipe-content").innerHTML = `
+    document.getElementById("article-content").innerHTML = `
       <section class="recipe-detail-header">
         <div class="container">
-          <a href="recipes.html" class="back-link">← Усі рецепти</a>
-          <div class="recipe-card-category">${recipe.category}</div>
-          <h1>${recipe.title}</h1>
-          <p style="max-width:600px; color: var(--color-text-muted);">${recipe.excerpt || ""}</p>
+          <a href="articles.html" class="back-link">← Усі статті</a>
+          <div class="recipe-card-category">${article.category}</div>
+          <h1>${article.title}</h1>
+          <p style="max-width:600px; color: var(--color-text-muted);">${article.excerpt || ""}</p>
           <div class="recipe-detail-meta">
-            <div><strong>${recipe.time}</strong>Час приготування</div>
-            <div><strong>${recipe.servings}</strong>Порцій</div>
-            <div><strong>${recipe.difficulty}</strong>Складність</div>
+            <div><strong>${article.readTime || ""}</strong>Час читання</div>
           </div>
-          <div class="recipe-detail-media">${recipeMediaHtml(recipe)}</div>
+          <div class="recipe-detail-media">${recipeMediaHtml(article)}</div>
         </div>
       </section>
       <section class="section" style="padding-top:0;">
         <div class="container">
-          <div class="recipe-body-grid">
-            <div class="recipe-panel">
-              <h2>Інгредієнти</h2>
-              <ul class="ingredient-list">${ingredientsHtml}</ul>
-            </div>
-            <div class="recipe-panel">
-              <h2>Покрокове приготування</h2>
-              <ol class="steps-list">${stepsHtml}</ol>
-            </div>
-          </div>
+          <div class="article-body">${bodyHtml}</div>
         </div>
       </section>
     `;

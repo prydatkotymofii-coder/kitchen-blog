@@ -672,6 +672,43 @@ img {
   line-height: 1.6;
 }
 
+/* ---------- Sub-tabs (напр. Рецепти / Статті всередині розділу) ---------- */
+
+.sub-tabs {
+  display: flex;
+  gap: 28px;
+  margin-bottom: 40px;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.sub-tabs a {
+  padding: 0 0 14px;
+  color: var(--color-text-muted);
+  font-weight: 500;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+
+.sub-tabs a:hover {
+  color: var(--color-accent);
+}
+
+.sub-tabs a.active {
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
+}
+
+/* ---------- Article body ---------- */
+
+.article-body {
+  max-width: 720px;
+}
+
+.article-body p {
+  margin-bottom: 1.3em;
+  font-size: 1.02rem;
+}
+
 /* ---------- Footer ---------- */
 
 .site-footer {
