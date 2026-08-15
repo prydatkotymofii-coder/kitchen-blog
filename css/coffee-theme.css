@@ -12,16 +12,26 @@ body.coffee-page {
   --color-text-muted: #7a5c40;
   --color-accent: #93591f;
   --color-accent-dark: #6b3f14;
+  --color-accent-soft: #e8d2ac;
   --color-line: #ddc4a0;
   --color-cream: #e8d2ac;
+
+  --shadow-sm: 0 1px 2px rgba(46, 26, 15, 0.10), 0 1px 3px rgba(46, 26, 15, 0.07);
+  --shadow-md: 0 8px 20px rgba(46, 26, 15, 0.16), 0 2px 6px rgba(46, 26, 15, 0.10);
 }
 
 body.coffee-page .site-header {
   background: linear-gradient(180deg, #ecdcc0 0%, var(--color-bg) 100%);
 }
 
+body.coffee-page .hero {
+  background: radial-gradient(ellipse 900px 420px at 15% 0%, var(--color-accent-soft) 0%, transparent 70%);
+}
+
 body.coffee-page .steps-list li::before {
   border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+  color: var(--color-accent-dark);
 }
 
 body.coffee-page .output-panel {
