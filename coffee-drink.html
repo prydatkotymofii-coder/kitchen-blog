@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title id="page-title">Рецепт кави — Кав'ярня дядка Тимофія</title>
+<title id="page-title">Рецепт кави - Кав'ярня дядка Тимофія</title>
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/coffee-theme.css">
 </head>
@@ -68,10 +68,10 @@
   if (!drink) {
     document.getElementById("not-found").style.display = "block";
   } else {
-    document.getElementById("page-title").textContent = `${drink.title} — Кав'ярня дядка Тимофія`;
+    document.getElementById("page-title").textContent = `${drink.title} - Кав'ярня дядка Тимофія`;
 
-    const ingredientsHtml = drink.ingredients.map((i) => `<li>${i}</li>`).join("");
-    const stepsHtml = drink.steps.map((s) => `<li>${s}</li>`).join("");
+    const ingredientsHtml = ingredientListHtml(drink.ingredients);
+    const stepsHtml = stepsListHtml(drink.steps);
 
     document.getElementById("recipe-content").innerHTML = `
       <section class="recipe-detail-header">

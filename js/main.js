@@ -46,6 +46,25 @@ function recipeMediaHtml(r) {
   return `<div class="media-placeholder"><span>Фото</span></div>`;
 }
 
+// Рядок-заголовок групи (напр. "Бісквіт:", "Готуємо крем:") в кінці має ":".
+// Такі рядки рендеряться як підзаголовок групи, а не як звичайний пункт списку -
+// зручно для складних рецептів із кількома складовими (торти, багатошарові страви).
+function isGroupLabel(text) {
+  return typeof text === "string" && text.trim().endsWith(":");
+}
+
+function ingredientListHtml(items) {
+  return (items || [])
+    .map((i) => (isGroupLabel(i) ? `<li class="group-label">${i}</li>` : `<li>${i}</li>`))
+    .join("");
+}
+
+function stepsListHtml(items) {
+  return (items || [])
+    .map((s) => (isGroupLabel(s) ? `<li class="group-label">${s}</li>` : `<li>${s}</li>`))
+    .join("");
+}
+
 function renderArticleCard(a, detailPage) {
   detailPage = detailPage || "article.html";
   const link = document.createElement("a");

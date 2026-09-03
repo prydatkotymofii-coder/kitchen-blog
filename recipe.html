@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title id="page-title">Рецепт — Татовий казан</title>
+<title id="page-title">Рецепт - Татовий казан</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -67,10 +67,10 @@
   if (!recipe) {
     document.getElementById("not-found").style.display = "block";
   } else {
-    document.getElementById("page-title").textContent = `${recipe.title} — Татовий казан`;
+    document.getElementById("page-title").textContent = `${recipe.title} - Татовий казан`;
 
-    const ingredientsHtml = recipe.ingredients.map((i) => `<li>${i}</li>`).join("");
-    const stepsHtml = recipe.steps.map((s) => `<li>${s}</li>`).join("");
+    const ingredientsHtml = ingredientListHtml(recipe.ingredients);
+    const stepsHtml = stepsListHtml(recipe.steps);
 
     document.getElementById("recipe-content").innerHTML = `
       <section class="recipe-detail-header">

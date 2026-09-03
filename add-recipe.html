@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Додати рецепт — Татовий казан</title>
+<title>Додати рецепт - Татовий казан</title>
 <meta name="description" content="Проста форма для додавання нового рецепту без знання коду.">
 <link rel="stylesheet" href="css/style.css">
 </head>
@@ -40,7 +40,7 @@
 <section class="section" style="padding-bottom:0;">
   <div class="container">
     <h1 class="section-title">Додати новий рецепт</h1>
-    <p class="section-subtitle">Заповни поля — праворуч одразу з'явиться готовий код. Скопіюй його і встав у файл <code>js/recipes-data.js</code>, у масив <code>RECIPES</code>, будь-де між квадратними дужками <code>[ ]</code>.</p>
+    <p class="section-subtitle">Заповни поля - праворуч одразу з'явиться готовий код. Скопіюй його і встав у файл <code>js/recipes-data.js</code>, у масив <code>RECIPES</code>, будь-де між квадратними дужками <code>[ ]</code>.</p>
   </div>
 </section>
 
@@ -90,7 +90,7 @@
         <div class="form-group">
           <label for="f-image">Шлях до фото (необов'язково)</label>
           <input type="text" id="f-image" placeholder="images/borsch.jpg">
-          <span class="builder-hint">Поклади файл фото у папку images/ і вкажи тут його назву. Якщо фото ще немає — залиш поле пустим, на сайті буде акуратна заглушка.</span>
+          <span class="builder-hint">Поклади файл фото у папку images/ і вкажи тут його назву. Якщо фото ще немає - залиш поле пустим, на сайті буде акуратна заглушка.</span>
         </div>
 
         <div class="form-group">
@@ -101,26 +101,26 @@
         <div class="form-group">
           <label for="f-ingredients">Інгредієнти</label>
           <textarea id="f-ingredients" rows="6" placeholder="Один інгредієнт на рядок, наприклад:&#10;500 г яловичини&#10;3 буряки&#10;1 цибулина"></textarea>
-          <span class="builder-hint">Кожен інгредієнт — з нового рядка.</span>
+          <span class="builder-hint">Кожен інгредієнт - з нового рядка.</span>
         </div>
 
         <div class="form-group">
           <label for="f-steps">Кроки приготування</label>
           <textarea id="f-steps" rows="8" placeholder="Один крок на рядок, наприклад:&#10;Відваріть м'ясо до готовності.&#10;Додайте овочі та варіть 15 хвилин."></textarea>
-          <span class="builder-hint">Кожен крок — з нового рядка, у порядку виконання.</span>
+          <span class="builder-hint">Кожен крок - з нового рядка, у порядку виконання.</span>
         </div>
       </form>
 
       <div class="output-panel">
         <h3>Готовий код рецепту</h3>
-        <div class="output-code" id="output-code">Почни заповнювати форму зліва — тут з'явиться код.</div>
+        <div class="output-code" id="output-code">Почни заповнювати форму зліва - тут з'явиться код.</div>
         <button class="btn btn-primary" id="copy-btn" style="width:100%; margin-bottom:16px;" type="button">Скопіювати код</button>
         <div class="output-steps">
           <strong>Що робити далі:</strong><br>
           1. Натисни «Скопіювати код».<br>
           2. Відкрий файл <code>js/recipes-data.js</code> у будь-якому текстовому редакторі.<br>
           3. Встав скопійований блок усередину масиву <code>RECIPES = [ ... ]</code> (перед закриваючою квадратною дужкою, розділивши комою з попереднім рецептом, якщо він є).<br>
-          4. Збережи файл і онови сторінку сайту — рецепт з'явиться автоматично.
+          4. Збережи файл і онови сторінку сайту - рецепт з'явиться автоматично.
         </div>
       </div>
 
@@ -200,7 +200,7 @@
     const steps = linesToArray(document.getElementById("f-steps").value);
 
     if (!title) {
-      document.getElementById("output-code").textContent = "Почни заповнювати форму зліва — тут з'явиться код.";
+      document.getElementById("output-code").textContent = "Почни заповнювати форму зліва - тут з'явиться код.";
       return;
     }
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Додати статтю про каву — Кав'ярня дядка Тимофія</title>
+<title>Додати статтю про каву - Кав'ярня дядка Тимофія</title>
 <meta name="description" content="Проста форма для додавання нової статті про каву без знання коду.">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/coffee-theme.css">
@@ -41,7 +41,7 @@
 <section class="section" style="padding-bottom:0;">
   <div class="container">
     <h1 class="section-title">Додати нову статтю про каву</h1>
-    <p class="section-subtitle">Заповни поля — праворуч одразу з'явиться готовий код. Скопіюй його і встав у файл <code>js/coffee-articles-data.js</code>, у масив <code>COFFEE_ARTICLES</code>, будь-де між квадратними дужками <code>[ ]</code>.</p>
+    <p class="section-subtitle">Заповни поля - праворуч одразу з'явиться готовий код. Скопіюй його і встав у файл <code>js/coffee-articles-data.js</code>, у масив <code>COFFEE_ARTICLES</code>, будь-де між квадратними дужками <code>[ ]</code>.</p>
   </div>
 </section>
 
@@ -75,7 +75,7 @@
         <div class="form-group">
           <label for="f-image">Шлях до фото (необов'язково)</label>
           <input type="text" id="f-image" placeholder="images/stattia-kava.jpg">
-          <span class="builder-hint">Поклади файл фото у папку images/ і вкажи тут його назву. Якщо фото ще немає — залиш поле пустим, на сайті буде акуратна заглушка.</span>
+          <span class="builder-hint">Поклади файл фото у папку images/ і вкажи тут його назву. Якщо фото ще немає - залиш поле пустим, на сайті буде акуратна заглушка.</span>
         </div>
 
         <div class="form-group">
@@ -85,21 +85,21 @@
 
         <div class="form-group">
           <label for="f-body">Текст статті</label>
-          <textarea id="f-body" rows="12" placeholder="Кожен абзац — з нового рядка."></textarea>
-          <span class="builder-hint">Кожен абзац — з нового рядка. Порожні рядки ігноруються.</span>
+          <textarea id="f-body" rows="12" placeholder="Кожен абзац - з нового рядка."></textarea>
+          <span class="builder-hint">Кожен абзац - з нового рядка. Порожні рядки ігноруються.</span>
         </div>
       </form>
 
       <div class="output-panel">
         <h3>Готовий код статті</h3>
-        <div class="output-code" id="output-code">Почни заповнювати форму зліва — тут з'явиться код.</div>
+        <div class="output-code" id="output-code">Почни заповнювати форму зліва - тут з'явиться код.</div>
         <button class="btn btn-primary" id="copy-btn" style="width:100%; margin-bottom:16px;" type="button">Скопіювати код</button>
         <div class="output-steps">
           <strong>Що робити далі:</strong><br>
           1. Натисни «Скопіювати код».<br>
           2. Відкрий файл <code>js/coffee-articles-data.js</code> у будь-якому текстовому редакторі.<br>
           3. Встав скопійований блок усередину масиву <code>COFFEE_ARTICLES = [ ... ]</code> (перед закриваючою квадратною дужкою, розділивши комою з попередньою статтею, якщо вона є).<br>
-          4. Збережи файл і онови сторінку <code>coffee-articles.html</code> — стаття з'явиться автоматично.
+          4. Збережи файл і онови сторінку <code>coffee-articles.html</code> - стаття з'явиться автоматично.
         </div>
       </div>
 
@@ -177,7 +177,7 @@
     const body = linesToArray(document.getElementById("f-body").value);
 
     if (!title) {
-      document.getElementById("output-code").textContent = "Почни заповнювати форму зліва — тут з'явиться код.";
+      document.getElementById("output-code").textContent = "Почни заповнювати форму зліва - тут з'явиться код.";
       return;
     }
 

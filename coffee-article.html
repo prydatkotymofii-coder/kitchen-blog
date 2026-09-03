@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title id="page-title">Стаття про каву — Кав'ярня дядка Тимофія</title>
+<title id="page-title">Стаття про каву - Кав'ярня дядка Тимофія</title>
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/coffee-theme.css">
 </head>
@@ -69,7 +69,7 @@
   if (!article) {
     document.getElementById("not-found").style.display = "block";
   } else {
-    document.getElementById("page-title").textContent = `${article.title} — Кав'ярня дядка Тимофія`;
+    document.getElementById("page-title").textContent = `${article.title} - Кав'ярня дядка Тимофія`;
 
     const bodyHtml = (article.body || []).map((p) => `<p>${p}</p>`).join("");
 

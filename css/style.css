@@ -496,6 +496,31 @@ select:focus-visible {
   font-size: 0.96rem;
 }
 
+.ingredient-list li.group-label,
+.steps-list li.group-label {
+  border-bottom: none;
+  padding: 22px 0 6px;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--color-ink);
+}
+
+.ingredient-list li.group-label:first-child,
+.steps-list li.group-label:first-child {
+  padding-top: 0;
+}
+
+.steps-list li.group-label {
+  counter-increment: none;
+  padding-left: 0;
+  margin-bottom: 8px;
+}
+
+.steps-list li.group-label::before {
+  content: none;
+}
+
 .steps-list {
   list-style: none;
   padding: 0;
