@@ -1,0 +1,7 @@
+# Налаштування публікації на Netlify.
+# Перед кожним деплоєм Netlify запускає скрипт, який оновлює sitemap.xml,
+# щоб нові рецепти й статті одразу потрапляли в карту сайту для Google.
+
+[build]
+  command = "node scripts/generate-sitemap.js"
+  publish = "."

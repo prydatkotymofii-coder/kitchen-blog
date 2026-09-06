@@ -45,7 +45,15 @@ function recipeMediaHtml(r, eager) {
   if (r.image) {
     const loading = eager ? "eager" : "lazy";
     const priority = eager ? ' fetchpriority="high"' : "";
-    return `<img src="${r.image}" alt="${r.title}" loading="${loading}"${priority}>`;
+    // Для карток у каталозі беремо зменшену копію з images/thumbs/ (у рази легша).
+    // Якщо зменшеної копії немає - onerror підставить оригінал, нічого не зламається.
+    let src = r.image;
+    let fallback = "";
+    if (!eager && r.image.startsWith("images/") && !r.image.startsWith("images/thumbs/")) {
+      src = r.image.replace("images/", "images/thumbs/");
+      fallback = ` onerror="this.onerror=null;this.src='${r.image}'"`;
+    }
+    return `<img src="${src}" alt="${r.title}" loading="${loading}"${priority}${fallback}>`;
   }
   return `<div class="media-placeholder"><span>Фото</span></div>`;
 }
