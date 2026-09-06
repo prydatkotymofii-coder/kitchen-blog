@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /add-recipe.html
+Disallow: /add-coffee.html
+Disallow: /add-article.html
+Disallow: /add-coffee-article.html
+Disallow: /instrukciya.html
+
+Sitemap: https://tatoviy-kazan.netlify.app/sitemap.xml

@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title id="page-title">Рецепт - Татовий казан</title>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Татовий казан">
+<meta property="og:locale" content="uk_UA">
+<meta property="og:title" content="Рецепт - Татовий казан">
+<meta property="og:description" content="Покроковий домашній рецепт із фото.">
+<meta property="og:image" content="https://tatoviy-kazan.netlify.app/images/social-preview.jpg">
+<meta property="og:url" content="https://tatoviy-kazan.netlify.app/recipe.html">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -67,7 +75,10 @@
   if (!recipe) {
     document.getElementById("not-found").style.display = "block";
   } else {
-    document.getElementById("page-title").textContent = `${recipe.title} - Татовий казан`;
+    const pageTitle = `${recipe.title} - Татовий казан`;
+    document.getElementById("page-title").textContent = pageTitle;
+    updateSocialTags(recipe, pageTitle);
+    injectRecipeSchema(recipe);
 
     const ingredientsHtml = ingredientListHtml(recipe.ingredients);
     const stepsHtml = stepsListHtml(recipe.steps);
@@ -84,7 +95,7 @@
             <div><strong>${recipe.servings}</strong>Порцій</div>
             <div><strong>${recipe.difficulty}</strong>Складність</div>
           </div>
-          <div class="recipe-detail-media">${recipeMediaHtml(recipe)}</div>
+          <div class="recipe-detail-media">${recipeMediaHtml(recipe, true)}</div>
         </div>
       </section>
       <section class="section" style="padding-top:0;">

@@ -38,10 +38,14 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// Повертає HTML для медіа-блоку картки: фото, якщо воно є, або елегантна заглушка
-function recipeMediaHtml(r) {
+// Повертає HTML для медіа-блоку картки: фото, якщо воно є, або елегантна заглушка.
+// eager=true - для головного фото на сторінці рецепту (воно й так одразу видно,
+// тому не варто його "ліниво" відкладати - це найважливіше фото для швидкості завантаження).
+function recipeMediaHtml(r, eager) {
   if (r.image) {
-    return `<img src="${r.image}" alt="${r.title}" loading="lazy">`;
+    const loading = eager ? "eager" : "lazy";
+    const priority = eager ? ' fetchpriority="high"' : "";
+    return `<img src="${r.image}" alt="${r.title}" loading="${loading}"${priority}>`;
   }
   return `<div class="media-placeholder"><span>Фото</span></div>`;
 }
@@ -63,6 +67,111 @@ function stepsListHtml(items) {
   return (items || [])
     .map((s) => (isGroupLabel(s) ? `<li class="group-label">${s}</li>` : `<li>${s}</li>`))
     .join("");
+}
+
+// ==========================================================================
+// SEO: розмітка Schema.org та OG-теги для сторінок рецептів і статей.
+// Завдяки цьому Google може показувати рецепт у пошуку з фото, часом
+// приготування та інгредієнтами, а не просто як звичайне посилання.
+// ==========================================================================
+
+const SITE_AUTHOR = "Тимофій Придатко";
+
+// Перетворює вільний текст часу ("30 хв + 3 год томління") у формат ISO 8601 ("PT3H30M")
+function parseDuration(text) {
+  if (!text) return null;
+  const str = String(text).toLowerCase();
+  let hours = 0;
+  let minutes = 0;
+  const hourMatch = str.match(/(\d+([.,]\d+)?)\s*год/);
+  const minMatch = str.match(/(\d+)\s*хв/);
+  if (hourMatch) hours = parseFloat(hourMatch[1].replace(",", "."));
+  if (minMatch) minutes = parseInt(minMatch[1], 10);
+  if (!hours && !minutes) return null;
+  const wholeHours = Math.floor(hours);
+  minutes += Math.round((hours - wholeHours) * 60);
+  return `PT${wholeHours ? wholeHours + "H" : ""}${minutes ? minutes + "M" : ""}`;
+}
+
+function absoluteUrl(path) {
+  if (!path) return null;
+  try {
+    return new URL(path, window.location.href).href;
+  } catch (e) {
+    return null;
+  }
+}
+
+function setMetaTag(key, value, attr) {
+  if (!value) return;
+  attr = attr || "property";
+  let el = document.head.querySelector(`meta[${attr}="${key}"]`);
+  if (!el) {
+    el = document.createElement("meta");
+    el.setAttribute(attr, key);
+    document.head.appendChild(el);
+  }
+  el.setAttribute("content", value);
+}
+
+// Оновлює og-теги під конкретний рецепт/статтю
+function updateSocialTags(item, pageTitle) {
+  setMetaTag("og:title", pageTitle);
+  setMetaTag("og:description", item.excerpt || "");
+  setMetaTag("og:url", window.location.href);
+  setMetaTag("og:type", "article");
+  setMetaTag("description", item.excerpt || "", "name");
+  const img = absoluteUrl(item.image);
+  if (img) setMetaTag("og:image", img);
+}
+
+function injectJsonLd(data) {
+  const script = document.createElement("script");
+  script.type = "application/ld+json";
+  script.textContent = JSON.stringify(data);
+  document.head.appendChild(script);
+}
+
+// Розмітка рецепту (страва або кава)
+function injectRecipeSchema(r) {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "Recipe",
+    name: r.title,
+    description: r.excerpt || "",
+    author: { "@type": "Person", name: SITE_AUTHOR },
+    recipeCategory: r.category,
+    inLanguage: "uk-UA",
+    recipeIngredient: (r.ingredients || []).filter((i) => !isGroupLabel(i)),
+    recipeInstructions: (r.steps || [])
+      .filter((s) => !isGroupLabel(s))
+      .map((s) => ({ "@type": "HowToStep", text: s }))
+  };
+
+  const img = absoluteUrl(r.image);
+  if (img) data.image = [img];
+  if (r.servings) data.recipeYield = `${r.servings} порцій`;
+
+  const duration = parseDuration(r.time);
+  if (duration) data.totalTime = duration;
+
+  injectJsonLd(data);
+}
+
+// Розмітка статті
+function injectArticleSchema(a) {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: a.title,
+    description: a.excerpt || "",
+    author: { "@type": "Person", name: SITE_AUTHOR },
+    articleSection: a.category,
+    inLanguage: "uk-UA"
+  };
+  const img = absoluteUrl(a.image);
+  if (img) data.image = [img];
+  injectJsonLd(data);
 }
 
 function renderArticleCard(a, detailPage) {

@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title id="page-title">Стаття - Татовий казан</title>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Татовий казан">
+<meta property="og:locale" content="uk_UA">
+<meta property="og:title" content="Стаття - Татовий казан">
+<meta property="og:description" content="Стаття про їжу з особистого кулінарного блогу.">
+<meta property="og:image" content="https://tatoviy-kazan.netlify.app/images/social-preview.jpg">
+<meta property="og:url" content="https://tatoviy-kazan.netlify.app/article.html">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -68,7 +76,10 @@
   if (!article) {
     document.getElementById("not-found").style.display = "block";
   } else {
-    document.getElementById("page-title").textContent = `${article.title} - Татовий казан`;
+    const pageTitle = `${article.title} - Татовий казан`;
+    document.getElementById("page-title").textContent = pageTitle;
+    updateSocialTags(article, pageTitle);
+    injectArticleSchema(article);
 
     const bodyHtml = (article.body || []).map((p) => `<p>${p}</p>`).join("");
 
@@ -82,7 +93,7 @@
           <div class="recipe-detail-meta">
             <div><strong>${article.readTime || ""}</strong>Час читання</div>
           </div>
-          <div class="recipe-detail-media">${recipeMediaHtml(article)}</div>
+          <div class="recipe-detail-media">${recipeMediaHtml(article, true)}</div>
         </div>
       </section>
       <section class="section" style="padding-top:0;">

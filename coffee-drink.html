@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title id="page-title">Рецепт кави - Кав'ярня дядка Тимофія</title>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Татовий казан">
+<meta property="og:locale" content="uk_UA">
+<meta property="og:title" content="Рецепт кави - Кав'ярня дядка Тимофія">
+<meta property="og:description" content="Покроковий рецепт приготування кави.">
+<meta property="og:image" content="https://tatoviy-kazan.netlify.app/images/social-preview.jpg">
+<meta property="og:url" content="https://tatoviy-kazan.netlify.app/coffee-drink.html">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/coffee-theme.css">
 </head>
@@ -68,7 +76,10 @@
   if (!drink) {
     document.getElementById("not-found").style.display = "block";
   } else {
-    document.getElementById("page-title").textContent = `${drink.title} - Кав'ярня дядка Тимофія`;
+    const pageTitle = `${drink.title} - Кав'ярня дядка Тимофія`;
+    document.getElementById("page-title").textContent = pageTitle;
+    updateSocialTags(drink, pageTitle);
+    injectRecipeSchema(drink);
 
     const ingredientsHtml = ingredientListHtml(drink.ingredients);
     const stepsHtml = stepsListHtml(drink.steps);
@@ -85,7 +96,7 @@
             <div><strong>${drink.servings}</strong>Порцій</div>
             <div><strong>${drink.difficulty}</strong>Складність</div>
           </div>
-          <div class="recipe-detail-media">${recipeMediaHtml(drink)}</div>
+          <div class="recipe-detail-media">${recipeMediaHtml(drink, true)}</div>
         </div>
       </section>
       <section class="section" style="padding-top:0;">

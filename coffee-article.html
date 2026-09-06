@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title id="page-title">Стаття про каву - Кав'ярня дядка Тимофія</title>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Татовий казан">
+<meta property="og:locale" content="uk_UA">
+<meta property="og:title" content="Стаття про каву - Кав'ярня дядка Тимофія">
+<meta property="og:description" content="Стаття про каву з особистого блогу.">
+<meta property="og:image" content="https://tatoviy-kazan.netlify.app/images/social-preview.jpg">
+<meta property="og:url" content="https://tatoviy-kazan.netlify.app/coffee-article.html">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/coffee-theme.css">
 </head>
@@ -69,7 +77,10 @@
   if (!article) {
     document.getElementById("not-found").style.display = "block";
   } else {
-    document.getElementById("page-title").textContent = `${article.title} - Кав'ярня дядка Тимофія`;
+    const pageTitle = `${article.title} - Кав'ярня дядка Тимофія`;
+    document.getElementById("page-title").textContent = pageTitle;
+    updateSocialTags(article, pageTitle);
+    injectArticleSchema(article);
 
     const bodyHtml = (article.body || []).map((p) => `<p>${p}</p>`).join("");
 
@@ -83,7 +94,7 @@
           <div class="recipe-detail-meta">
             <div><strong>${article.readTime || ""}</strong>Час читання</div>
           </div>
-          <div class="recipe-detail-media">${recipeMediaHtml(article)}</div>
+          <div class="recipe-detail-media">${recipeMediaHtml(article, true)}</div>
         </div>
       </section>
       <section class="section" style="padding-top:0;">
