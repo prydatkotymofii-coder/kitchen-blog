@@ -142,6 +142,18 @@ function parseDuration(text) {
   return `PT${wholeHours ? wholeHours + "H" : ""}${minutes ? minutes + "M" : ""}`;
 }
 
+// Правильне відмінювання: 1 порція, 2-4 порції, 5+ порцій
+function servingsText(count) {
+  const n = Math.abs(parseInt(count, 10));
+  if (!n) return null;
+  const last = n % 10;
+  const lastTwo = n % 100;
+  if (lastTwo >= 11 && lastTwo <= 14) return `${n} порцій`;
+  if (last === 1) return `${n} порція`;
+  if (last >= 2 && last <= 4) return `${n} порції`;
+  return `${n} порцій`;
+}
+
 function imageUrl(image) {
   if (!image) return null;
   return `${SITE}/${String(image).replace(/^\/+/, "")}`;
@@ -258,7 +270,7 @@ function buildPage(item, section, categories) {
         image: item.image ? [imageUrl(item.image)] : undefined,
         author: { "@type": "Person", name: AUTHOR },
         recipeCategory: item.category,
-        recipeYield: item.servings ? `${item.servings} порцій` : undefined,
+        recipeYield: servingsText(item.servings) || undefined,
         totalTime: parseDuration(item.time) || undefined,
         inLanguage: "uk-UA",
         recipeIngredient: (item.ingredients || []).filter((i) => !isGroupLabel(i)),
