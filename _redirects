@@ -1,0 +1,9 @@
+# Старі адреси рецептів (recipe.html?id=...) ведуть на нові окремі сторінки.
+# Потрібно, щоб уже надіслані комусь посилання й те, що вже проіндексував
+# Google, продовжувало працювати. Знак "!" примушує правило спрацювати,
+# навіть якщо файл recipe.html фізично існує.
+
+/recipe.html          id=:slug  /recipes/:slug.html          301!
+/coffee-drink.html    id=:slug  /coffee/:slug.html           301!
+/article.html         id=:slug  /articles/:slug.html         301!
+/coffee-article.html  id=:slug  /coffee-articles/:slug.html  301!

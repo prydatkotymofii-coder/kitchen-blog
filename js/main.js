@@ -182,10 +182,17 @@ function injectArticleSchema(a) {
   injectJsonLd(data);
 }
 
-function renderArticleCard(a, detailPage) {
-  detailPage = detailPage || "article.html";
+// Адреса сторінки рецепту/статті. Кожен запис має власну сторінку, яку
+// автоматично генерує scripts/build.js при публікації:
+// напр. /recipes/hretskyi-salat.html
+function detailUrl(item, section) {
+  return `/${section}/${item.id}.html`;
+}
+
+function renderArticleCard(a, section) {
+  section = section || "articles";
   const link = document.createElement("a");
-  link.href = `${detailPage}?id=${encodeURIComponent(a.id)}`;
+  link.href = detailUrl(a, section);
   link.className = "recipe-card-link";
   link.innerHTML = `
     <article class="recipe-card">
@@ -203,10 +210,10 @@ function renderArticleCard(a, detailPage) {
   return link;
 }
 
-function renderRecipeCard(r, detailPage) {
-  detailPage = detailPage || "recipe.html";
+function renderRecipeCard(r, section) {
+  section = section || "recipes";
   const a = document.createElement("a");
-  a.href = `${detailPage}?id=${encodeURIComponent(r.id)}`;
+  a.href = detailUrl(r, section);
   a.className = "recipe-card-link";
   a.innerHTML = `
     <article class="recipe-card">
