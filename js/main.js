@@ -26,8 +26,17 @@ document.addEventListener("DOMContentLoaded", () => {
       ? (typeof COFFEE_CATEGORIES !== "undefined" ? COFFEE_CATEGORIES : [])
       : (typeof CATEGORIES !== "undefined" ? CATEGORIES : []);
     const targetPage = isCoffee ? "coffee.html" : "recipes.html";
+    const items = isCoffee
+      ? (typeof COFFEE !== "undefined" ? COFFEE : null)
+      : (typeof RECIPES !== "undefined" ? RECIPES : null);
+    const visibleCats = nonEmptyCategories(cats, items);
 
-    cats.forEach((cat) => {
+    // Жодної категорії з рецептами - ховаємо всю колонку разом із заголовком
+    if (visibleCats.length === 0) {
+      footerCategories.parentElement.style.display = "none";
+    }
+
+    visibleCats.forEach((cat) => {
       const li = document.createElement("li");
       const a = document.createElement("a");
       a.href = `${targetPage}?category=${encodeURIComponent(cat)}`;
@@ -37,6 +46,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+// Лишає тільки категорії, в яких є хоч один запис, щоб посилання й кнопки
+// не вели на порожній список. Якщо записів на сторінці немає (файл з даними
+// не підключений), повертає всі категорії як є.
+function nonEmptyCategories(categories, items) {
+  if (!Array.isArray(items)) return categories;
+  return categories.filter((cat) => items.some((item) => item && item.category === cat));
+}
 
 // Повертає HTML для медіа-блоку картки: фото, якщо воно є, або елегантна заглушка.
 // eager=true - для головного фото на сторінці рецепту (воно й так одразу видно,

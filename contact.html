@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Контакти - Татовий казан</title>
 <meta name="description" content="Напиши мені - питання, ідеї для рецептів, пропозиції.">
+<link rel="canonical" href="https://tatoviy-kazan.netlify.app/contact.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Татовий казан">
 <meta property="og:locale" content="uk_UA">
@@ -18,7 +19,11 @@
 <link rel="icon" type="image/png" href="/favicon-96.png" sizes="96x96">
 <link rel="icon" type="image/png" href="/favicon-192.png" sizes="192x192">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Karla:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="css/style.css">
+<script src="js/sections.js"></script>
 </head>
 <body>
 
@@ -28,7 +33,7 @@
     <ul class="nav-links">
       <li><a href="index.html">Головна</a></li>
       <li><a href="recipes.html">Рецепти</a></li>
-      <li><a href="coffee.html">☕ Кав'ярня</a></li>
+      <li data-needs="cafe"><a href="coffee.html">☕ Кав'ярня</a></li>
       <li><a href="about.html">Про мене</a></li>
       <li><a href="contact.html">Контакти</a></li>
     </ul>
@@ -88,8 +93,8 @@
         <ul>
           <li><a href="index.html">Головна</a></li>
           <li><a href="recipes.html">Рецепти</a></li>
-          <li><a href="articles.html">Статті</a></li>
-          <li><a href="coffee.html">Кав'ярня</a></li>
+          <li data-needs="articles"><a href="articles.html">Статті</a></li>
+          <li data-needs="cafe"><a href="coffee.html">Кав'ярня</a></li>
           <li><a href="about.html">Про мене</a></li>
           <li><a href="contact.html">Контакти</a></li>
         </ul>
