@@ -77,15 +77,30 @@ const SECTIONS = [
   }
 ];
 
+// Третє значення - розділ, без якого сторінка порожня. Поки в ньому немає
+// жодного запису, сторінку не додаємо в sitemap (Google не любить порожніх сторінок).
 const STATIC_PAGES = [
   ["/", "1.0"],
   ["/recipes.html", "0.9"],
-  ["/coffee.html", "0.9"],
-  ["/articles.html", "0.8"],
-  ["/coffee-articles.html", "0.8"],
+  ["/coffee.html", "0.9", "cafe"],
+  ["/articles.html", "0.8", "articles"],
+  ["/coffee-articles.html", "0.8", "coffee-articles"],
   ["/about.html", "0.6"],
   ["/contact.html", "0.5"]
 ];
+
+// Які розділи поки порожні. Заповнюється на початку build().
+// "cafe" - уся Кав'ярня: і рецепти кави, і статті про каву.
+const emptySections = new Set();
+
+// Скільки записів у кожній категорії, напр. { "Салати": 1, "Випічка": 0 }
+function countByCategory(items) {
+  const counts = {};
+  items.forEach((item) => {
+    if (item && item.category) counts[item.category] = (counts[item.category] || 0) + 1;
+  });
+  return counts;
+}
 
 // ---------- допоміжні функції ----------
 
@@ -159,6 +174,30 @@ function imageUrl(image) {
   return `${SITE}/${String(image).replace(/^\/+/, "")}`;
 }
 
+// Ширина фото в пікселях (JPEG або PNG), або null, якщо визначити не вдалося.
+// Потрібна, щоб браузер сам вибрав між зменшеною копією та оригіналом.
+function imageWidth(relPath) {
+  try {
+    const buf = fs.readFileSync(path.join(ROOT, relPath));
+    // PNG: ширина записана одразу в заголовку
+    if (buf.readUInt32BE(0) === 0x89504e47) return buf.readUInt32BE(16);
+    // JPEG: шукаємо блок SOF, у якому записані розміри кадру
+    if (buf[0] !== 0xff || buf[1] !== 0xd8) return null;
+    let i = 2;
+    while (i + 9 < buf.length) {
+      if (buf[i] !== 0xff) return null;
+      const marker = buf[i + 1];
+      const isSof =
+        marker >= 0xc0 && marker <= 0xcf && marker !== 0xc4 && marker !== 0xc8 && marker !== 0xcc;
+      if (isSof) return buf.readUInt16BE(i + 7);
+      i += 2 + buf.readUInt16BE(i + 2);
+    }
+  } catch (err) {
+    // файлу немає або він пошкоджений - просто не використовуємо srcset
+  }
+  return null;
+}
+
 function jsonLdScript(data) {
   // "<" екрануємо, щоб вміст не міг закрити тег <script>
   const json = JSON.stringify(data, null, 2).replace(/</g, "\\u003c");
@@ -173,8 +212,9 @@ function headerHtml() {
     <a href="/index.html" class="nav-logo">Татовий <em>казан</em></a>
     <ul class="nav-links">
       <li><a href="/index.html">Головна</a></li>
-      <li><a href="/recipes.html">Рецепти</a></li>
-      <li><a href="/coffee.html">☕ Кав'ярня</a></li>
+      <li><a href="/recipes.html">Рецепти</a></li>${
+        emptySections.has("cafe") ? "" : `\n      <li><a href="/coffee.html">☕ Кав'ярня</a></li>`
+      }
       <li><a href="/about.html">Про мене</a></li>
       <li><a href="/contact.html">Контакти</a></li>
     </ul>
@@ -196,6 +236,16 @@ function footerHtml(section, categories) {
     )
     .join("\n");
 
+  // Колонку категорій показуємо, лише якщо є хоч одна категорія з записами
+  const categoriesColumn = categories.length
+    ? `      <div>
+        <h4>${esc(section.categoriesTitle)}</h4>
+        <ul>
+${categoryItems}
+        </ul>
+      </div>`
+    : "";
+
   const bottom =
     section.theme === "coffee"
       ? "© 2026 Татовий казан · Кав'ярня дядка Тимофія"
@@ -212,19 +262,14 @@ function footerHtml(section, categories) {
         <h4>Навігація</h4>
         <ul>
           <li><a href="/index.html">Головна</a></li>
-          <li><a href="/recipes.html">Рецепти</a></li>
-          <li><a href="/articles.html">Статті</a></li>
-          <li><a href="/coffee.html">Кав'ярня</a></li>
+          <li><a href="/recipes.html">Рецепти</a></li>${
+            emptySections.has("articles") ? "" : `\n          <li><a href="/articles.html">Статті</a></li>`
+          }${emptySections.has("cafe") ? "" : `\n          <li><a href="/coffee.html">Кав'ярня</a></li>`}
           <li><a href="/about.html">Про мене</a></li>
           <li><a href="/contact.html">Контакти</a></li>
         </ul>
       </div>
-      <div>
-        <h4>${esc(section.categoriesTitle)}</h4>
-        <ul>
-${categoryItems}
-        </ul>
-      </div>
+${categoriesColumn}
     </div>
     <div class="footer-bottom">${bottom}</div>
   </div>
@@ -233,8 +278,22 @@ ${categoryItems}
 
 function mediaHtml(item) {
   if (item.image) {
-    const src = "/" + String(item.image).replace(/^\/+/, "");
-    return `<img src="${esc(src)}" alt="${esc(item.title)}" loading="eager" fetchpriority="high">`;
+    const image = String(item.image).replace(/^\/+/, "");
+    const src = "/" + image;
+    // Якщо є зменшена копія в images/thumbs/, даємо браузеру вибір: телефон
+    // завантажить легку копію, великий екран - оригінал.
+    let srcset = "";
+    if (image.startsWith("images/") && !image.startsWith("images/thumbs/")) {
+      const thumb = image.replace("images/", "images/thumbs/");
+      const thumbWidth = imageWidth(thumb);
+      const fullWidth = imageWidth(image);
+      if (thumbWidth && fullWidth && thumbWidth < fullWidth) {
+        srcset =
+          ` srcset="/${esc(thumb)} ${thumbWidth}w, ${esc(src)} ${fullWidth}w"` +
+          ` sizes="(max-width: 1080px) calc(100vw - 56px), 1024px"`;
+      }
+    }
+    return `<img src="${esc(src)}"${srcset} alt="${esc(item.title)}" loading="eager" fetchpriority="high">`;
   }
   return `<div class="media-placeholder"><span>Фото</span></div>`;
 }
@@ -339,6 +398,9 @@ ${(item.body || []).map((p) => `            <p>${esc(p)}</p>`).join("\n")}
 <link rel="icon" type="image/png" href="/favicon-96.png" sizes="96x96">
 <link rel="icon" type="image/png" href="/favicon-192.png" sizes="192x192">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Karla:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="/css/style.css">${coffeeCss}
 ${jsonLdScript(schema)}
 </head>
@@ -376,14 +438,37 @@ ${footerHtml(section, categories)}
 // ---------- запуск ----------
 
 function build() {
-  const urls = STATIC_PAGES.map(([loc, priority]) => ({ loc: SITE + loc, priority }));
+  // Спершу читаємо всі дані, щоб знати, які розділи поки порожні
+  const itemsBySection = {};
+  SECTIONS.forEach((section) => {
+    const all = readVariable(section.dataFile, section.variable);
+    const valid = all.filter((item) => item && item.id && item.title);
+    if (valid.length < all.length) {
+      console.warn(
+        `[build] пропускаю записів без id або назви у ${section.dataFile}: ${all.length - valid.length}`
+      );
+    }
+    itemsBySection[section.dir] = valid;
+    if (valid.length === 0) emptySections.add(section.dir);
+  });
+  if (emptySections.has("coffee") && emptySections.has("coffee-articles")) {
+    emptySections.add("cafe");
+  }
+
+  const urls = STATIC_PAGES.filter(([, , needs]) => !needs || !emptySections.has(needs)).map(
+    ([loc, priority]) => ({ loc: SITE + loc, priority })
+  );
   let pagesWritten = 0;
 
   SECTIONS.forEach((section) => {
-    const items = readVariable(section.dataFile, section.variable);
-    const categories = readVariable(
-      section.categoriesFrom || section.dataFile,
-      section.categoriesVariable
+    const items = itemsBySection[section.dir];
+    const categoriesFile = section.categoriesFrom || section.dataFile;
+
+    // У футері лишаємо тільки категорії, в яких уже є хоч один рецепт
+    const categorySource = SECTIONS.find((s) => s.dataFile === categoriesFile);
+    const counts = countByCategory(itemsBySection[categorySource.dir]);
+    const categories = readVariable(categoriesFile, section.categoriesVariable).filter(
+      (cat) => counts[cat] > 0
     );
 
     const outDir = path.join(ROOT, section.dir);
@@ -391,10 +476,6 @@ function build() {
     fs.mkdirSync(outDir, { recursive: true });
 
     items.forEach((item) => {
-      if (!item || !item.id || !item.title) {
-        console.warn(`[build] пропускаю запис без id або назви у ${section.dataFile}`);
-        return;
-      }
       const html = buildPage(item, section, categories);
       fs.writeFileSync(path.join(outDir, `${item.id}.html`), html, "utf8");
       pagesWritten++;
@@ -402,13 +483,23 @@ function build() {
     });
   });
 
+  // Маленький файл для звичайних сторінок сайту: він підказує, які розділи
+  // порожні, і посилання на них ховаються (див. "data-needs" у style.css)
+  const emptyClasses = [...emptySections].map((name) => `"empty-${name}"`).join(", ");
+  const sectionsJs =
+    `// Цей файл створює scripts/build.js при кожній публікації - руками не редагуй.\n` +
+    `// Позначає порожні розділи, щоб посилання на них не вели на порожні сторінки.\n` +
+    (emptyClasses ? `document.documentElement.classList.add(${emptyClasses});\n` : "");
+  fs.writeFileSync(path.join(ROOT, "js", "sections.js"), sectionsJs, "utf8");
+
   const sitemap =
     `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
     urls.map((u) => `  <url><loc>${u.loc}</loc><priority>${u.priority}</priority></url>`).join("\n") +
     `\n</urlset>\n`;
   fs.writeFileSync(path.join(ROOT, "sitemap.xml"), sitemap, "utf8");
 
-  console.log(`[build] згенеровано сторінок: ${pagesWritten}, адрес у sitemap: ${urls.length}`);
+  const emptyNote = emptySections.size ? `, порожні розділи: ${[...emptySections].join(", ")}` : "";
+  console.log(`[build] згенеровано сторінок: ${pagesWritten}, адрес у sitemap: ${urls.length}${emptyNote}`);
 }
 
 try {

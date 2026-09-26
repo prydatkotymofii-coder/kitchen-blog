@@ -5,7 +5,8 @@
    мінімум декоративних елементів, фото — головний акцент.
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Karla:wght@400;500;600&display=swap');
+/* Шрифти Google підключені прямо в <head> кожної сторінки - так вони
+   завантажуються раніше, ніж через @import тут. */
 
 :root {
   --color-bg: #fbf7f1;
@@ -838,6 +839,18 @@ select:focus-visible {
   border-top: 1px solid var(--color-line);
   font-size: 0.82rem;
   color: var(--color-text-muted);
+}
+
+/* ---------- Порожні розділи ----------
+   Поки в розділі немає жодного запису, посилання на нього ховаються, щоб
+   відвідувачі не потрапляли на порожню сторінку. Клас на <html> ставить
+   js/sections.js - його створює scripts/build.js при кожній публікації.
+   Щойно додаси перший запис у розділ, посилання з'являться самі. */
+
+.empty-cafe [data-needs="cafe"],
+.empty-articles [data-needs="articles"],
+.empty-coffee-articles [data-needs="coffee-articles"] {
+  display: none;
 }
 
 /* ---------- Responsive ---------- */

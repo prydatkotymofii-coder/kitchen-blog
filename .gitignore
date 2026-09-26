@@ -7,3 +7,6 @@
 
 # Службові файли macOS
 .DS_Store
+
+# Створюється автоматично при публікації (scripts/build.js)
+js/sections.js
